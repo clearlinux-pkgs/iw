@@ -4,12 +4,12 @@
 #
 Name     : iw
 Version  : 4.0
-Release  : 1
+Release  : 2
 URL      : https://www.kernel.org/pub/software/network/iw/iw-4.0.tar.xz
 Source0  : https://www.kernel.org/pub/software/network/iw/iw-4.0.tar.xz
 Summary  : No detailed summary available
 Group    : Development/Tools
-License  : MIT
+License  : ISC
 Requires: iw-bin
 Requires: iw-doc
 BuildRequires : libnl-dev
@@ -44,11 +44,11 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1513672551
+export SOURCE_DATE_EPOCH=1513672662
 make V=1  %{?_smp_mflags}
 
 %install
-export SOURCE_DATE_EPOCH=1513672551
+export SOURCE_DATE_EPOCH=1513672662
 rm -rf %{buildroot}
 %make_install
 
