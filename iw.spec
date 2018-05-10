@@ -4,7 +4,7 @@
 #
 Name     : iw
 Version  : 4.14
-Release  : 5
+Release  : 6
 URL      : https://www.kernel.org/pub/software/network/iw/iw-4.14.tar.xz
 Source0  : https://www.kernel.org/pub/software/network/iw/iw-4.14.tar.xz
 Summary  : No detailed summary available
