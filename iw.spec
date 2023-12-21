@@ -6,10 +6,10 @@
 # autospec commit: c1050fe
 #
 Name     : iw
-Version  : 5.19
-Release  : 15
-URL      : https://mirrors.kernel.org/pub/software/network/iw/iw-5.19.tar.xz
-Source0  : https://mirrors.kernel.org/pub/software/network/iw/iw-5.19.tar.xz
+Version  : 6.7
+Release  : 16
+URL      : https://mirrors.kernel.org/pub/software/network/iw/iw-6.7.tar.xz
+Source0  : https://mirrors.kernel.org/pub/software/network/iw/iw-6.7.tar.xz
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : ISC
@@ -53,15 +53,18 @@ man components for the iw package.
 
 
 %prep
-%setup -q -n iw-5.19
-cd %{_builddir}/iw-5.19
+%setup -q -n iw-6.7
+cd %{_builddir}/iw-6.7
+pushd ..
+cp -a iw-6.7 buildavx2
+popd
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1701973610
+export SOURCE_DATE_EPOCH=1703171030
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -78,6 +81,14 @@ ASFLAGS="$CLEAR_INTERMEDIATE_ASFLAGS"
 LDFLAGS="$CLEAR_INTERMEDIATE_LDFLAGS"
 make  %{?_smp_mflags}
 
+pushd ../buildavx2
+CFLAGS="$CLEAR_INTERMEDIATE_CFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
+CXXFLAGS="$CLEAR_INTERMEDIATE_CXXFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
+FFLAGS="$CLEAR_INTERMEDIATE_FFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
+FCFLAGS="$CLEAR_INTERMEDIATE_FCFLAGS -m64 -march=x86-64-v3 "
+LDFLAGS="$CLEAR_INTERMEDIATE_LDFLAGS -m64 -march=x86-64-v3 "
+make  %{?_smp_mflags}
+popd
 
 %install
 export GCC_IGNORE_WERROR=1
@@ -94,17 +105,22 @@ FFLAGS="$CLEAR_INTERMEDIATE_FFLAGS"
 FCFLAGS="$CLEAR_INTERMEDIATE_FCFLAGS"
 ASFLAGS="$CLEAR_INTERMEDIATE_ASFLAGS"
 LDFLAGS="$CLEAR_INTERMEDIATE_LDFLAGS"
-export SOURCE_DATE_EPOCH=1701973610
+export SOURCE_DATE_EPOCH=1703171030
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/iw
 cp %{_builddir}/iw-%{version}/COPYING %{buildroot}/usr/share/package-licenses/iw/733f780e306fe2b5c9aa92b45372ffb07978b35e || :
+pushd ../buildavx2/
+%make_install_v3
+popd
 %make_install
+/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
 
 %files
 %defattr(-,root,root,-)
 
 %files bin
 %defattr(-,root,root,-)
+/V3/usr/bin/iw
 /usr/bin/iw
 
 %files license
